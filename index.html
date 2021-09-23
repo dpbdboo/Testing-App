@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<style>
+    .img-container {
+        width: 100%;
+        height: 300px;
+        position: relative;
+    }
+    .img-container img {
+        height: 300px;
+    }
+
+    .img-container .type {
+        top:0;
+        position: absolute;
+        width: 100px;
+        height: 30px;
+        background-color: lightblue;
+        display: flex;
+        align-items: center;
+        padding-left: 1rem;
+    }
+
+    .card-text {
+        font-size: 12px;
+    }
+    .community-navbar{
+        padding: 1rem;
+    }
+    .img-container .notification-container {
+        background-color: lightcoral;
+        height: 50px;
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        padding: 1rem;
+    }
+</style>
+</head>
+<body>
+    <nav class="nav community-navbar">
+        <a class="nav-link active" aria-current="page" href="#">Community Management</a>
+      </nav>
+    <div id="main-container">
+    </div>
+    <script>
+        const images= 
+        [
+            'https://as1.ftcdn.net/v2/jpg/03/06/12/16/1000_F_306121609_rx7ZEvsJRvSrOJ6TrgGcns28syGERWE8.jpg',
+            'https://images.unsplash.com/photo-1632343231059-d99f9409088c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80',
+            'https://images.unsplash.com/photo-1632319870017-d732d3d7e853?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80'
+        ];
+
+        const data = [
+            //Assume today is September 23, 2021
+            //Will Expire today is september 23, 2021
+            {
+                type: 'Events', 
+                title: 'Lorem Events', 
+                createdBy: 'John Doe', 
+                dateCreated: '20 Sep 2021', 
+                postingDate: '20 Sep 2021', 
+                expiryDate: '30 Sep 2021', 
+                status: 'PUBLISHED',
+                willExpire: true,
+                willGoLive: false,
+                willGoliveToday: false,
+                days: 7
+            }, 
+            //Will go live today
+            {
+                type: 'Articles', 
+                title: 'Lorem Articles', 
+                createdBy: 'Jane Doe', 
+                dateCreated: '10 Sep 2021', 
+                postingDate: '23 Sep 2021', 
+                expiryDate: '30 Sep 2021', 
+                status: 'FOR PUBLISH',
+                willExpire: false,
+                willGoLive: false,
+                willGoliveToday: true,
+                days: null
+            },
+            //Will Go Live in x days
+            {
+                type: 'Perks', 
+                title: 'Lorem Perks', 
+                createdBy: 'John Doe', 
+                dateCreated: '10 Sep 2021', 
+                postingDate: '27 Sep 2021', 
+                expiryDate: '1 Oct 2021', 
+                status: 'FOR PUBLISH',
+                willExpire: false,
+                willGoLive: true,
+                willGoliveToday: false,
+                days: 4
+            },
+            //Normal EXPIRED
+            {
+                type: 'C & P', 
+                title: 'Lorem C %assdsadasdasasP', 
+                createdBy: 'John Doe', 
+                dateCreated: '10 Sep 2021', 
+                postingDate: '11 Sep 2021', 
+                expiryDate: '13 Sep 2021', 
+                status: 'EXPIRED',
+                willExpire: false,
+                willGoLive: false,
+                willGoliveToday: false,
+                days: null
+            }
+        ];
+        const row = document.createElement('div');
+        data.forEach(obj => {
+            row.classList.add('row');
+            row.appendChild(createElementFromHTML(constructHtmlTemplate(obj)));
+            document.getElementById('main-container').appendChild(row)
+        });
+
+        function createElementFromHTML(htmlString) {
+            var div = document.createElement('div');
+            div.innerHTML = htmlString.trim();
+
+            // Change this to div.childNodes to support multiple top-level nodes
+            return div.firstChild; 
+        }
+
+        function constructHtmlTemplate(properties) {
+            const { type, title, createdBy, dateCreated, postingDate, expiryDate, status,
+            willExpire, willGoLive, willGoliveToday, days } = properties;
+            return `
+            <div class="col-xs-12 col-sm-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="img-container">
+                        <img src="${images[Math.round(Math.random() * 2)]}" class="card-img-top" alt="...">
+                        <div class="type">${type}</div>
+                        ${
+                            (willExpire || willGoLive || willGoliveToday) ?  `<div class="test">
+                                <div class="notification-container"> 
+                                   ${createMessage(properties)}
+                                </div>
+                            </div>` : ''
+                        }
+                    </div>
+                    <div class="card-body">
+                    <h5 class="card-title">${title}</h5>
+                    <hr>
+                    <p class="h6">Created By:</p>
+                    <p class="card-text">${createdBy}</p>
+                    <p class="h6">Date Created:</p>
+                    <p class="card-text">${dateCreated}</p>
+                    <p class="h6">Posting Date:</p>
+                    <p class="card-text">${postingDate}</p>
+                    <p class="h6">Expiry Date:</p>
+                    <p class="card-text">${expiryDate}</p>
+                    <hr>
+                    <div class="text-center">
+                        <button class="m-auto btn btn-primary status">${status}</button>
+                    </div>
+                    </div>
+                </div>
+            </div>  
+            `
+        }
+
+        function createMessage({willExpire, willGoLive, willGoliveToday, days}) {
+            if(willExpire) {
+                return `Will expire in ${days} days`;
+            } 
+            if(willGoLive) {
+                return `Will go live in ${days} days`;
+            }
+            if(willGoliveToday) {
+                return `Will go live today`
+            }
+        }
+    
+    </script>
+</body>
+</html>
